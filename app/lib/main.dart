@@ -1,5 +1,7 @@
-import 'package:app/widgets/user_transactions.dart';
+import 'package:app/widgets/new_transaction.dart';
+import 'package:app/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'models/transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,21 +11,85 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'My Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primarySwatch: Colors.purple,
+          accentColor: Colors.red,
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(fontFamily: 'OpenSans', fontSize: 18.0)),
+          appBarTheme: AppBarTheme(
+              textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6:
+                      TextStyle(fontFamily: 'OpenSans', fontSize: 24.0)))),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
+    // Transaction(
+    //     id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
+    // Transaction(
+    //     id: 't2',
+    //     title: 'Weekly Groceries',
+    //     amount: 18.53,
+    //     date: DateTime.now()),
+    // Transaction(
+    //     id: 't2',
+    //     title: 'Weekly Groceries',
+    //     amount: 18.53,
+    //     date: DateTime.now()),
+    // Transaction(
+    //     id: 't2',
+    //     title: 'Weekly Groceries',
+    //     amount: 18.53,
+    //     date: DateTime.now()),
+  ];
+
+  void _addNewTransaction(String title, double amount) {
+    final newTx = Transaction(
+        id: DateTime.now().toString(),
+        title: title,
+        amount: amount,
+        date: DateTime.now());
+
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {},
+              child: NewTransaction(_addNewTransaction));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Flutter App'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              _startAddNewTransaction(context);
+            },
+          )
+        ],
+        title: Text('My Expenses'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -32,13 +98,19 @@ class MyHomePage extends StatelessWidget {
               Container(
                 width: double.infinity,
                 child: Card(
-                  color: Colors.blue,
+                  color: Theme.of(context).primaryColor,
                   child: Text('Chart!'),
                   elevation: 5.0,
                 ),
               ),
-              UserTransactions()
+              TransactionList(_userTransactions)
             ]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _startAddNewTransaction(context);
+        },
       ),
     );
   }
