@@ -13,6 +13,6 @@ To track an expense:
 
 ## Images
 
-<img src="images/ios.png" alt="iPhone 12 Pro Max" width="40%" height="50%">
-<img src="images/android.png" alt="Pixel 4" width="40%" height="50%">
+<img src="images/ios.png" alt="iPhone 12 Pro Max" width="30%" height="40%">
+<img src="images/android.png" alt="Pixel 4" width="30%" height="40%">
 
