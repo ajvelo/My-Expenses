@@ -11,7 +11,7 @@ To track an expense:
     2. Enter the name of the expense and amount.
     3. Select the day this expense was paid.
 
-## Images
+## Screenshots
 <p float="left">
 <img src="images/ios.png" alt="iPhone 12 Pro Max" width="40%" height="50%">
 <img src="images/android.png" alt="Pixel 4" width="40%" height="50%">
