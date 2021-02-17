@@ -50,52 +50,49 @@ class _NewTransactionState extends State<NewTransaction> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5.0,
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: "Title"),
-              controller: _titleController,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Amount"),
-              controller: _amountController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitData(),
-            ),
-            Container(
-              height: 72,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(_selectedDate == null
-                        ? "No Date Chosen!"
-                        : 'Picked Date: ${DateFormat('MMMM dd, yyyy').format(_selectedDate)}'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(labelText: "Title"),
+            controller: _titleController,
+          ),
+          TextField(
+            decoration: InputDecoration(labelText: "Amount"),
+            controller: _amountController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            onSubmitted: (_) => _submitData(),
+          ),
+          Container(
+            height: 72,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(_selectedDate == null
+                      ? "No Date Chosen!"
+                      : 'Picked Date: ${DateFormat('MMMM dd, yyyy').format(_selectedDate)}'),
+                ),
+                TextButton(
+                  onPressed: () => _presentDatePicker(),
+                  child: Text(
+                    "Choose Date",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextButton(
-                    onPressed: () => _presentDatePicker(),
-                    child: Text(
-                      "Choose Date",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: TextButton.styleFrom(
-                        primary: Theme.of(context).primaryColor),
-                  )
-                ],
-              ),
+                  style: TextButton.styleFrom(
+                      primary: Theme.of(context).primaryColor),
+                )
+              ],
             ),
-            ElevatedButton(
-              onPressed: () => _submitData(),
-              child: Text('Add Transaction'),
-              style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor,
-                  textStyle: TextStyle(
-                      color: Theme.of(context).textTheme.button.color)),
-            )
-          ],
-        ),
+          ),
+          ElevatedButton(
+            onPressed: () => _submitData(),
+            child: Text('Add Transaction'),
+            style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+                textStyle:
+                    TextStyle(color: Theme.of(context).textTheme.button.color)),
+          )
+        ],
       ),
     );
   }

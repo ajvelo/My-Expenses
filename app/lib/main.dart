@@ -2,9 +2,14 @@ import 'package:app/widgets/chart.dart';
 import 'package:app/widgets/new_transaction.dart';
 import 'package:app/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'models/transaction.dart';
+import 'dart:io';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
 }
 
@@ -67,16 +72,19 @@ class _MyHomePageState extends State<MyHomePage> {
   void _startAddNewTransaction(BuildContext context) {
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (_) {
-          return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {},
-              child: NewTransaction(_addNewTransaction));
+          return SingleChildScrollView(
+            child: NewTransaction(
+              _addNewTransaction,
+            ),
+          );
         });
   }
 
   @override
   Widget build(BuildContext context) {
+    final mediaQueryHeight = MediaQuery.of(context).size.height;
     final appBar = AppBar(
       actions: [
         IconButton(
@@ -95,23 +103,23 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
-                  height: (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height) *
-                      0.25,
+                  height:
+                      (mediaQueryHeight - appBar.preferredSize.height) * 0.25,
                   child: Chart(_recentTransactions)),
               Container(
-                  height: (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height) *
-                      0.7,
+                  height:
+                      (mediaQueryHeight - appBar.preferredSize.height) * 0.7,
                   child: TransactionList(_userTransactions, _deleteTransaction))
             ]),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          _startAddNewTransaction(context);
-        },
-      ),
+      floatingActionButton: Platform.isIOS
+          ? null
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                _startAddNewTransaction(context);
+              },
+            ),
     );
   }
 }
