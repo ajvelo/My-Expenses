@@ -2,6 +2,7 @@ import 'package:app/widgets/chart.dart';
 import 'package:app/widgets/new_transaction.dart';
 import 'package:app/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'models/transaction.dart';
 import 'dart:io';
@@ -85,41 +86,59 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final mediaQueryHeight = MediaQuery.of(context).size.height;
-    final appBar = AppBar(
-      actions: [
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            _startAddNewTransaction(context);
-          },
-        )
-      ],
-      title: Text('My Expenses'),
-    );
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                  height:
-                      (mediaQueryHeight - appBar.preferredSize.height) * 0.25,
-                  child: Chart(_recentTransactions)),
-              Container(
-                  height:
-                      (mediaQueryHeight - appBar.preferredSize.height) * 0.7,
-                  child: TransactionList(_userTransactions, _deleteTransaction))
-            ]),
-      ),
-      floatingActionButton: Platform.isIOS
-          ? null
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                _startAddNewTransaction(context);
-              },
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text('My Expenses'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTransaction(context),
+                )
+              ],
             ),
-    );
+          )
+        : AppBar(
+            actions: [
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  _startAddNewTransaction(context);
+                },
+              )
+            ],
+            title: Text('My Expenses'),
+          );
+    final pageBody = SafeArea(
+        child: SingleChildScrollView(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+                height: (mediaQueryHeight - appBar.preferredSize.height) * 0.25,
+                child: Chart(_recentTransactions)),
+            Container(
+                height: (mediaQueryHeight - appBar.preferredSize.height) * 0.7,
+                child: TransactionList(_userTransactions, _deleteTransaction))
+          ]),
+    ));
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButton: Platform.isIOS
+                ? null
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      _startAddNewTransaction(context);
+                    },
+                  ),
+          );
   }
 }
